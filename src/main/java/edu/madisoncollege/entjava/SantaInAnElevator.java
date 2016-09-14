@@ -1,6 +1,10 @@
 package edu.madisoncollege.entjava;
 
 
+import org.apache.log4j.Logger;
+
+import java.io.*;
+
 /**
  * Created by paulawaite on 9/7/16.
  *
@@ -37,5 +41,50 @@ package edu.madisoncollege.entjava;
 
 public class SantaInAnElevator {
 
+    private int floor;
+    private final Logger logger = Logger.getLogger(this.getClass());
+
+    public int readInputFile(String inputFile){
+
+        floor = 0;
+
+        try {
+             BufferedReader input = new BufferedReader(
+                     new InputStreamReader(
+                     new FileInputStream(inputFile)));
+            int c;
+            while ((c = input.read()) != -1){
+                char character = (char) c;
+                floor = floor + processDirection(character);
+            }
+        } catch (FileNotFoundException fileNotFoundEx){
+            logger.error("The file was not found.");
+            fileNotFoundEx.printStackTrace();
+        } catch (IOException ioEx){
+            logger.error("Failure during file read.");
+            ioEx.printStackTrace();
+        } catch (Exception exception){
+            logger.error("An unidentified exception was " +
+                    "encountered.");
+            exception.printStackTrace();
+        } finally {
+
+        }
+
+        return floor;
+    }
+
+
+    public int processDirection(char direction){
+        int floorModifier = 0;
+
+        if(direction=='(') {
+            floorModifier++;
+        }else if(direction==')'){
+            floorModifier--;
+        }
+
+        return floorModifier;
+    }
 
 }
